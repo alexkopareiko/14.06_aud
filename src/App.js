@@ -31,12 +31,19 @@ class App extends Component {
           <input type="text" ref={(input) => { this.searchInput = input; }}/>
             <button onClick={this.findContact.bind(this)}>Find contact</button>
         </div>
+    
         <ul>
         {
+
           this.props.contactState.map((contact, index) =>
           <li key={index}>
               {contact.contactName} &nbsp;
-              <button onClick={() => this.props.onDeleteContact(contact.id)}>Delete</button>
+              <button onClick={() => this.props.onDeleteContact(contact.id)}>Delete</button>  &nbsp;
+              <button onClick={() => this.props.onDeleteContact(contact.id)}>Edit</button>
+              <div>
+                <input type="text" defaultValue={contact.contactName} ref={(input) => { this.editInput = input; }}/>
+                <button onClick={() => this.props.onEditContact(contact.id, this.editInput.value)}>Ok</button>
+              </div>
           </li>
 
         )
@@ -69,10 +76,17 @@ export default connect(
     },
 
     onDeleteContact: (contactId) => {
-      //console.log(contactId);
       dispatch({ type: 'DELETE_CONTACT', payload: contactId})
+    },
 
-    }
+    onEditContact: (contactId, contactName) => {
+      dispatch({ type: 'EDIT_CONTACT', payload: {id: contactId, contactName: contactName}})
+    },
+
+    onVisibility: (toggle) => {
+      dispatch({ type: 'TOGGLE_BTN', payload: !toggle})
+    },
+
 
   }
 )) (App);
