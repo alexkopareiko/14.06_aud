@@ -11,12 +11,11 @@ export default function contactReducer(state = initialState, action) {
       action.payload
     ]
   }
+
   else if(action.type === 'DELETE_CONTACT') {
     const contactId = action.payload;
     return state.filter(contactState => contactState.id !== contactId);
   }
-
-
 
   else if(action.type === 'EDIT_CONTACT') {
     return state.map( (item, index) => {

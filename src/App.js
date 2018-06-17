@@ -3,16 +3,22 @@ import { connect } from 'react-redux';
 
 class App extends Component {
 
+  componentDidMount(){
+     this.contactInput.focus();
+   }
+
 
   addContact() {
     this.props.onAddContact(this.contactInput.value);
     this.contactInput.value = '';
+    this.contactInput.focus();
   }
 
   findContact() {
     console.log('FindContact', this.searchInput.value);
     this.props.onFindContact(this.searchInput.value);
   }
+
 
   render() {
     return (
@@ -23,13 +29,16 @@ class App extends Component {
         </div>
         <div>
           <input type="text" ref={(input) => { this.searchInput = input; }}/>
-          <button onClick={this.findContact.bind(this)}>Find contact</button>
+            <button onClick={this.findContact.bind(this)}>Find contact</button>
         </div>
         <ul>
         {
-
           this.props.contactState.map((contact, index) =>
-          <li key={index}>{contact.contactName}</li>
+          <li key={index}>
+              {contact.contactName} &nbsp;
+              <button onClick={() => this.props.onDeleteContact(contact.id)}>Delete</button>
+          </li>
+
         )
           }
         </ul>
@@ -41,6 +50,7 @@ class App extends Component {
 
 
 }
+
 export default connect(
   state => ({
     contactState: state.contactReducer.filter(contactTemp => contactTemp.contactName.includes(state.filterContactReducer))
@@ -56,7 +66,13 @@ export default connect(
 
     onFindContact: (contactName) => {
       dispatch({ type: 'FIND_CONTACT', payload: contactName})
+    },
+
+    onDeleteContact: (contactId) => {
+      //console.log(contactId);
+      dispatch({ type: 'DELETE_CONTACT', payload: contactId})
+
     }
 
-  })
-)(App);
+  }
+)) (App);
